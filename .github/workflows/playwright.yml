@@ -10,15 +10,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+
+    # ✅ 这里改成安装 pnpm
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v3
+      with:
+        version: 10 # 你可以改成最新版本
+
     - uses: actions/setup-node@v4
       with:
         node-version: lts/*
+        cache: 'pnpm'  # ✅ 让 GitHub Actions 缓存 pnpm 依赖，加速构建
+
     - name: Install dependencies
-      run: npm ci
+      run: pnpm install  # ✅ 改成 pnpm
+
     - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
+      run: pnpx playwright install --with-deps  # ✅ 改成 pnpx
+
     - name: Run Playwright tests
-      run: npx playwright test
+      run: pnpx playwright test  # ✅ 也改成 pnpx
+
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
